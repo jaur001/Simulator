@@ -3,11 +3,17 @@ package model.client;
 import model.restaurant.Plate;
 import model.restaurant.Restaurant;
 
+import java.util.Date;
+
 public class Client {
-    private static int count = 0;
-    private int NIF = ++count;
-    private int invitedPeople;
+    private int NIF;
     private String name;
+    private String surname;
+    private String email;
+    private String genre;
+    private Date birthdate;
+
+    private int invitedPeople;
     private Restaurant restaurant = null;
 
     public Client(int invitedPeople, String name) {
@@ -15,12 +21,46 @@ public class Client {
         this.name = name;
     }
 
+    public Client(int NIF, String name, String surname, String email, String genre, String birthdate) {
+        this.NIF = NIF;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.genre = genre;
+        this.birthdate = new Date(birthdate);
+    }
+
+    public Client(String[] data) {
+        this.NIF = Integer.parseInt(data[0]);
+        this.name = data[1];
+        this.surname = data[2];
+        this.email = data[3];
+        this.genre = data[4];
+        this.birthdate = new Date(data[5]);
+    }
+
     public int getNIF() {
         return NIF;
     }
 
-    public String getClientName() {
+    public String getName() {
         return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
     }
 
     public Restaurant getRestaurant() {

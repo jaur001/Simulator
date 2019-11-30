@@ -43,6 +43,7 @@ public class CFDIBillGenerator {
             amount.setTextContent(Double.toString(eating.getAmount()));
             bill.appendChild(amount);
 
+
             Element date = doc.createElement("Date");
             date.setTextContent("10/10/2020");
             bill.appendChild(date);
@@ -52,7 +53,7 @@ public class CFDIBillGenerator {
             bill.appendChild(commensal);
 
             Element clientName = doc.createElement("ClientName");
-            clientName.setTextContent(eating.getClient().getClientName());
+            clientName.setTextContent(eating.getClient().getName());
             bill.appendChild(clientName);
 
             Element clientNIF = doc.createElement("ClientNIF");
@@ -63,7 +64,7 @@ public class CFDIBillGenerator {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("./XMLFiles/" + eating.getRestaurant().getNIF() + "-" + eating.getClient().getNIF() + "-" + billsCount++ + ".xml"));
+            StreamResult result = new StreamResult(new File("./XMLFiles/"+ billsCount++ + " - "  + eating.getRestaurant().getName() + "-" + eating.getClient().getSurname() + ".xml"));
             transformer.transform(source, result);
 
         } catch (ParserConfigurationException pce) {

@@ -1,5 +1,7 @@
 package main;
 
+import clientLoader.ClientLoader;
+import clientLoader.ClientLoaderCSV;
 import model.client.Client;
 import model.restaurant.Eating;
 import model.restaurant.Restaurant;
@@ -14,33 +16,16 @@ import java.util.List;
 public class BillsMain {
     public static void main(String[] args) {
         int count = 1;
-        List<Restaurant> auxList = new ArrayList<Restaurant>();
+
         RestaurantThread[] threads = new RestaurantThread[count];
+        List <Restaurant> restaurantList = RestaurantThread.mergeLists(threads);
 
-        for (int i = 0; i < count; i++) {
-            threads[i] = new RestaurantThread(i);
-            threads[i].start();
-        }
+        ClientLoader loader = new ClientLoaderCSV();
+        List<Client> clientList = loader.load("./src/main/java/clientLoader/MOCK_DATA.csv",10);
 
-        for (int i = 0; i < count; i++) {
-            try {
-                threads[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        for (int i = 0; i < count; i++) {
-            auxList.addAll(threads[i].getList());
-        }
-        List<Restaurant> finalList = new ArrayList<Restaurant>(new HashSet<Restaurant>(auxList));
-        Client client = new Client(8,"Coleman");
-        int invitedPeople = 4;
-        for (Restaurant i : finalList){
-            double mean = (i.getMaxPricePlate()+i.getMinPricePlate())/2;
-            double plateNumber = Math.abs(new NormalDistribution(1,1).sample());
-            double amount = Math.abs(new NormalDistribution(mean,i.getMaxPricePlate()-mean).sample()) * plateNumber * invitedPeople;
-            CFDIBillGenerator.generateBill(new Eating(i,client,new Date(),amount,invitedPeople));
+        BillThread[] billThreads = new BillThread[restaurantList.size()];
+        for (Restaurant i : restaurantList){
+            BillThread.executeThreads(billThreads,i,clientList);
         }
     }
 }

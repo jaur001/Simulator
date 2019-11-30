@@ -1,10 +1,12 @@
 package main;
 
 import model.restaurant.Restaurant;
-import webscrapper.TripAdvisorRestaurantLoader;
+import restaurantLoader.RestaurantLoader;
+import restaurantLoader.TripAdvisorRestaurantLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class RestaurantThread extends Thread{
@@ -21,11 +23,34 @@ public class RestaurantThread extends Thread{
 
     @Override
     public void run(){
-        TripAdvisorRestaurantLoader loader = new TripAdvisorRestaurantLoader();
+        RestaurantLoader loader = new TripAdvisorRestaurantLoader();
         try {
             list = loader.load(i);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<Restaurant> mergeLists(RestaurantThread[] threads){
+        int count = threads.length;
+        List<Restaurant> auxList = new ArrayList<Restaurant>();
+        for (int i = 0; i < count; i++) {
+            threads[i] = new RestaurantThread(i);
+            threads[i].start();
+        }
+
+        for (int i = 0; i < count; i++) {
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (int i = 0; i < count; i++) {
+            auxList.addAll(threads[i].getList());
+        }
+        List<Restaurant> finalList = new ArrayList<Restaurant>(new HashSet<Restaurant>(auxList));
+        return finalList;
     }
 }

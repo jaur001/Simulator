@@ -1,4 +1,4 @@
-package webscrapper;
+package restaurantLoader;
 
 import model.restaurant.Menu;
 import model.restaurant.Restaurant;
