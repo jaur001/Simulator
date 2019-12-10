@@ -3,10 +3,7 @@ package model.restaurant;
 import model.client.Client;
 import model.provider.Provider;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // No se tiene en cuenta que el plato puede acabarse ni que el plato use productos de un proveedor.
 // Simplemente se trata al proveedor como una renta mensual que tiene que pagar.
@@ -20,7 +17,6 @@ public class Restaurant {
     private String name;
     private String street;
     private String telephoneNumber;
-    private Menu menu;
 
     private int minPricePlate;
     private int maxPricePlate;
@@ -31,8 +27,9 @@ public class Restaurant {
     private int numberWorkers;
     private RestaurantFinancialData data;
     private List<Provider> providersList = new ArrayList<Provider>();
-    private Map<Client, Bill> billList = new HashMap<Client, Bill>();
+    private List<Eating> eatingList = new ArrayList<Eating>();
     private List<PlateOrder> orders = new ArrayList<PlateOrder>();
+
 
 
 
@@ -40,28 +37,6 @@ public class Restaurant {
         this.name = name;
         this.street = street;
         this.telephoneNumber = telephoneNumber;
-        this.numberTables = numberTables;
-        this.numberWorkers = numberWorkers;
-        this.data = new RestaurantFinancialData(socialCapital);
-    }
-
-    public Restaurant(String name, String street, String telephoneNumber, Menu menu, int numberTables, int numberWorkers,double socialCapital) {
-        this.name = name;
-        this.street = street;
-        this.telephoneNumber = telephoneNumber;
-        this.menu = menu;
-        this.numberTables = numberTables;
-        this.numberWorkers = numberWorkers;
-        this.data = new RestaurantFinancialData(socialCapital);
-    }
-
-    public Restaurant(String name, String street, String telephoneNumber, Menu menu, int minPricePlate, int maxPricePlate, int numberTables, int numberWorkers,double socialCapital) {
-        this.name = name;
-        this.street = street;
-        this.telephoneNumber = telephoneNumber;
-        this.menu = menu;
-        this.minPricePlate = minPricePlate;
-        this.maxPricePlate = maxPricePlate;
         this.numberTables = numberTables;
         this.numberWorkers = numberWorkers;
         this.data = new RestaurantFinancialData(socialCapital);
@@ -93,10 +68,6 @@ public class Restaurant {
 
     public String getTelephoneNumber() {
         return telephoneNumber;
-    }
-
-    public Menu getMenu() {
-        return menu;
     }
 
     public int getMinPricePlate() {
@@ -136,10 +107,10 @@ public class Restaurant {
         data.addDebt(providersList.get(providersList.size()-1).getProductPrice());
     }
 
-    public boolean newClient(Client client){
+    public boolean newClient(Client client, int invitedPeople){
         if(numberTables > busyTables){
-            busyTables += (client.getInvitedPeople()%4==0)? client.getInvitedPeople()/4: client.getInvitedPeople()/4 + 1;
-            billList.put(client,new Bill());
+            busyTables += getNecessaryTables(invitedPeople);
+            eatingList.add(new Eating(this,client,new Date(),new Bill(),invitedPeople));
             client.setRestaurant(this);
             return true;
         }
@@ -147,35 +118,50 @@ public class Restaurant {
     }
 
     public void payBill(Client client){
-        busyTables -= (client.getInvitedPeople()%4==0)? client.getInvitedPeople()/4: client.getInvitedPeople()/4+1;
-        this.data.addClientSale(billList.get(client).getFinalPrice());
-        billList.remove(client);
-        client.setRestaurant(null);
+        try{
+            Eating eatingToPay = searchClient(client);
+            busyTables -= getNecessaryTables(eatingToPay.getInvitedPeople());
+            this.data.addClientSale(eatingToPay.getBill().getFinalPrice());
+            eatingList.remove(eatingToPay);
+            client.setRestaurant(null);
+        } catch (NullPointerException e){
+            System.out.println("ERROR: Client " + client + " not found in any eating of the list of the restaurant!");
+        }
+    }
+
+    private int getNecessaryTables(int invitedPeople){
+        return (invitedPeople%4==0)? invitedPeople/4: invitedPeople/4 + 1;
+    }
+
+    private Eating searchClient(Client client){
+       for (Eating i : eatingList){
+           if(i.getClient().getNIF() == client.getNIF()){
+               return i;
+           }
+       }
+       return null;
     }
 
     public void addOrder(Plate plate, Client client){
-        if(menu.getPlateList().contains(plate)) {
-            orders.add(new PlateOrder(plate, client));
-            System.out.println("Plate ordered");
-        } else {
-            System.out.println("We do not have that plate");
-        }
+        orders.add(new PlateOrder(plate, client));
+        System.out.println("Plate ordered");
     }
 
     public void completeOrders(){
         for(PlateOrder i : orders){
-            billList.get(i.getClient()).addPlateToBill(i.getPlate());
+            try{
+                searchClient(i.getClient()).getBill().addPlateToBill(i.getPlate());
+                System.out.println("Orders completed");
+                orders = new ArrayList<PlateOrder>();
+            } catch (NullPointerException e){
+                System.out.println("ERROR: Client " + i.getClient() + " not found in any eating of the list of the restaurant!");
+            }
         }
-        System.out.println("Orders completed");
-        orders = new ArrayList<PlateOrder>();
     }
 
-    public boolean hasMenu(){
-        return menu!=null;
-    }
 
     @Override
     public String toString() {
-        return name;
+        return minPricePlate + " - " + maxPricePlate;
     }
 }

@@ -25,7 +25,7 @@ public class RestaurantDisplay extends JPanel {
         for (Restaurant i : restaurantList){
             restaurantSelector.addItem(i);
         }
-        name.setText(restaurantSelector.getSelectedItem().toString());
+        name.setText(restaurantSelector.toString());
         //street.setText((Restaurant)(restaurantSelector.getSelectedItem()));
         add(restaurantSelector);
         add(name);

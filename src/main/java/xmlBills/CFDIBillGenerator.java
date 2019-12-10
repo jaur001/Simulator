@@ -1,9 +1,6 @@
 package xmlBills;
 
-import model.client.Client;
 import model.restaurant.Eating;
-import model.restaurant.Restaurant;
-import org.apache.commons.math3.distribution.NormalDistribution;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -16,11 +13,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CFDIBillGenerator {
-    private static int billsCount = 0;
+    private static final AtomicInteger billsCount = new AtomicInteger();
 
-    public static void generateBill(Eating eating){
+    public static void generateBill(Eating eating, String url){
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -40,7 +38,7 @@ public class CFDIBillGenerator {
             restaurantNIF.setTextContent(Integer.toString(eating.getRestaurant().getNIF()));
 
             Element amount = doc.createElement("Amount");
-            amount.setTextContent(Double.toString(eating.getAmount()));
+            amount.setTextContent(Double.toString(eating.getBill().getFinalPrice()));
             bill.appendChild(amount);
 
 
@@ -53,7 +51,7 @@ public class CFDIBillGenerator {
             bill.appendChild(commensal);
 
             Element clientName = doc.createElement("ClientName");
-            clientName.setTextContent(eating.getClient().getName());
+            clientName.setTextContent(eating.getClient().getFirstName());
             bill.appendChild(clientName);
 
             Element clientNIF = doc.createElement("ClientNIF");
@@ -64,7 +62,7 @@ public class CFDIBillGenerator {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("./XMLFiles/"+ billsCount++ + " - "  + eating.getRestaurant().getName() + "-" + eating.getClient().getSurname() + ".xml"));
+            StreamResult result = new StreamResult(new File(url + billsCount.getAndIncrement() + " - "  + eating.getRestaurant().getName() + "-" + eating.getClient().getLastName() + ".xml"));
             transformer.transform(source, result);
 
         } catch (ParserConfigurationException pce) {

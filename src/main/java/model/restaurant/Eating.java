@@ -8,14 +8,14 @@ public class Eating {
     private Restaurant restaurant;
     private Client client;
     private Date date;
-    private double amount;
+    private Bill bill;
     private int invitedPeople;
 
-    public Eating(Restaurant restaurant, Client client, Date date, double amount, int invitedPeople) {
+    public Eating(Restaurant restaurant, Client client, Date date, Bill bill, int invitedPeople) {
         this.restaurant = restaurant;
         this.client = client;
         this.date = date;
-        this.amount = amount;
+        this.bill = bill;
         this.invitedPeople = invitedPeople;
     }
 
@@ -31,8 +31,9 @@ public class Eating {
         return date;
     }
 
-    public double getAmount() {
-        return amount;
+
+    public Bill getBill() {
+        return bill;
     }
 
     public int getInvitedPeople() {

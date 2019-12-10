@@ -7,56 +7,86 @@ import java.util.Date;
 
 public class Client {
     private int NIF;
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
     private String email;
-    private String genre;
+    private String gender;
     private Date birthdate;
+    private String job;
+    private String country;
+    private String telephoneNumber;
+    private String cardNumber;
+    private double salary;
+    private RoutineList routineList;
 
-    private int invitedPeople;
     private Restaurant restaurant = null;
 
-    public Client(int invitedPeople, String name) {
-        this.invitedPeople = invitedPeople;
-        this.name = name;
-    }
 
-    public Client(int NIF, String name, String surname, String email, String genre, String birthdate) {
+    public Client(int NIF, String firstName, String lastName, String email, String gender, String birthdate) {
         this.NIF = NIF;
-        this.name = name;
-        this.surname = surname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.genre = genre;
+        this.gender = gender;
         this.birthdate = new Date(birthdate);
     }
 
     public Client(String[] data) {
         this.NIF = Integer.parseInt(data[0]);
-        this.name = data[1];
-        this.surname = data[2];
-        this.email = data[3];
-        this.genre = data[4];
-        this.birthdate = new Date(data[5]);
+        this.firstName = data[1];
+        this.lastName = data[2];
+        this.birthdate = new Date(data[3]);
+        this.gender = data[4];
+        this.job = data[5];
+        this.country = data[6];
+        this.telephoneNumber = data[7];
+        this.email = data[8];
+        this.cardNumber = data[9];
+    }
+
+    public RoutineList getRoutineList() {
+        return routineList;
+    }
+
+    public void setRoutineList(RoutineList routineList) {
+        this.routineList = routineList;
+        this.salary = routineList.getSalary();
     }
 
     public int getNIF() {
         return NIF;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getGenre() {
-        return genre;
+    public String getGender() {
+        return gender;
     }
 
     public Date getBirthdate() {
@@ -65,10 +95,6 @@ public class Client {
 
     public Restaurant getRestaurant() {
         return restaurant;
-    }
-
-    public int getInvitedPeople() {
-        return invitedPeople;
     }
 
     public void setRestaurant(Restaurant restaurant) {
@@ -80,7 +106,8 @@ public class Client {
     }
 
     public boolean chooseRestaurantToEat(Restaurant restaurant){
-        return restaurant.newClient(this);
+        int invitedPeople = 4;
+        return restaurant.newClient(this, invitedPeople);
     }
 
     public void order(Plate plate){

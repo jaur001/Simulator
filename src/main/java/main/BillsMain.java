@@ -16,16 +16,11 @@ import java.util.List;
 public class BillsMain {
     public static void main(String[] args) {
         int count = 1;
-
-        RestaurantThread[] threads = new RestaurantThread[count];
-        List <Restaurant> restaurantList = RestaurantThread.mergeLists(threads);
-
-        ClientLoader loader = new ClientLoaderCSV();
-        List<Client> clientList = loader.load("./src/main/java/clientLoader/MOCK_DATA.csv",10);
-
-        BillThread[] billThreads = new BillThread[restaurantList.size()];
-        for (Restaurant i : restaurantList){
-            BillThread.executeThreads(billThreads,i,clientList);
-        }
+        int rowNumber = 30;
+        String urlClient = "./clientsFile/ExportCSV.csv";
+        String urlBill = "./xmlFiles/";
+        List <Restaurant> restaurantList = RestaurantThread.mergeLists(new RestaurantThread[count]);
+        List<Client> clientList = new ClientLoaderCSV().load(urlClient,rowNumber);
+        BillThread.executeThreads(new BillThread[restaurantList.size()],restaurantList,clientList,urlBill);
     }
 }

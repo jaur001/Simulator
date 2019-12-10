@@ -13,23 +13,9 @@ public class ClientLoaderCSV implements ClientLoader {
 
     public List<Client> load(String url,int rowNumber) {
         List<Client> clientList = new ArrayList<Client>();
-        BufferedReader br = null;
-        String line = "";
-
         try {
-            br = new BufferedReader(new FileReader(url));
-            int i = 0;
-            while ((line = br.readLine()) != null && i < rowNumber) {
-
-                // use comma as separator
-                String[] data = line.split(",");
-                clientList.add(new Client(data));
-                i++;
-            }
-
+            clientList = new ClientReaderCSV(new BufferedReader(new FileReader(url))).read(rowNumber);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         return clientList;

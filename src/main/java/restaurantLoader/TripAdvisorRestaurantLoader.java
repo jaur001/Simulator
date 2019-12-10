@@ -1,6 +1,5 @@
 package restaurantLoader;
 
-import model.restaurant.Menu;
 import model.restaurant.Restaurant;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,16 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TripAdvisorRestaurantLoader implements RestaurantLoader{
-    public List<Restaurant> load(int j) throws IOException {
-        List<Restaurant> restaurantList = new ArrayList<Restaurant>();
-        String telephoneNumber = "";
-        String street = "";
-        String name;
-        Menu menu = null;
-        int minPrice = 0;
-        int maxPrice = 0;
+    private List<Restaurant> restaurantList = new ArrayList<Restaurant>();
+    private String telephoneNumber = "";
+    private String street = "";
+    private String name;
+    private int minPrice = 0;
+    private int maxPrice = 0;
+    private int numberTables = 20;
+    private int numberWorkers = 10;
+    private double socialCapital = 10000;
 
-        Document doc = Jsoup.connect("https://www.tripadvisor.es/RestaurantSearch-g187471-oa"+ Integer.toString(j*30) + "-a_date.2019__2D__11__2D__20-a_people.2-a_time.20%3A00%3A00-a_zur.2019__5F__11__5F__20-Gran_Ca.html#EATERY_LIST_CONTENTS").get();
+    public List<Restaurant> load(int j) throws IOException {
+
+
+        Document doc = Jsoup.connect("https://www.tripadvisor.es/RestaurantSearch-g187471-oa"+ j*30 + "-a_date.2019__2D__11__2D__20-a_people.2-a_time.20%3A00%3A00-a_zur.2019__5F__11__5F__20-Gran_Ca.html#EATERY_LIST_CONTENTS").get();
         Element topRestaurant = doc.getElementById("component_2");
         Elements topRestaurantList = topRestaurant.getElementsByClass("restaurants-list-ListCell__restaurantName--2aSdo");
 
@@ -29,70 +32,61 @@ public class TripAdvisorRestaurantLoader implements RestaurantLoader{
             doc = Jsoup.connect("https://www.tripadvisor.es"+i.attr("href")).get();
 
             //Name
-            Elements nameList = doc.getElementsByClass("ui_header h1");
-            name = nameList.first().text();
+            getName(doc);
             System.out.println(j + ") " + name);
 
-            //menu
-            Elements menuList = doc.getElementsByClass("is-hidden-mobile blEntry menu  ui_link");
-            if (menuList.hasText()) {
-                String menuStr = menuList.first().attr("onclick");
-                menuStr = menuStr.indexOf("https:")>=0?menuStr.substring(menuStr.indexOf("https:"),menuStr.length()-2):"";
-                menu = new Menu(menuStr);
-            }
-
             //Telephone number
-            Elements numberList = doc.getElementsByClass("detail  is-hidden-mobile");
-            if (numberList.hasText()) {
-                telephoneNumber = numberList.first().text();
-            }
+            getTelephoneNumber(doc);
 
             //Street
-            Elements streetList = doc.getElementsByClass("street-address");
-            if (streetList.hasText()) {
-                street = streetList.first().text();
-            }
+            getStreet(doc);
 
             //Price
-            Elements els = doc.getElementsByClass("restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h");
-            if(els.size()>0){
-                String text = els.first().text();
-                if(text.indexOf("€")>=0){
-                    String price = text.substring(0,text.indexOf("€",text.indexOf("-"))+1);
-                    minPrice = Integer.parseInt(price.substring(0,price.indexOf("€")-1));
-                    maxPrice = Integer.parseInt(price.substring(price.indexOf("-")+2,price.length()-2));
-                }
-            } else {
-                els = doc.getElementsByClass("restaurants-details-card-TagCategories__tagText--Yt3iG");
-                if(els.size()>0){
-                    String text = els.first().text();
-                    if (text.indexOf("€")>=0){
-                        String price = text.substring(0,text.indexOf("€",text.indexOf("-"))+1);
-                        minPrice = Integer.parseInt(price.substring(0,price.indexOf("€")-1));
-                        maxPrice = Integer.parseInt(price.substring(price.indexOf("-")+2,price.length()-2));
-                    }
-                }
-            }
-            if (menu!=null){
-                restaurantList.add(new Restaurant(name,street,telephoneNumber, menu,minPrice,maxPrice,20,10,10000));
-            } else {
-                restaurantList.add(new Restaurant(name,street,telephoneNumber,minPrice,maxPrice,20,10,10000));
-            }
+            getPrice(doc);
 
+            restaurantList.add(new Restaurant(name,street,telephoneNumber,minPrice,maxPrice,numberTables,numberWorkers,socialCapital));
         }
-
 
         return restaurantList;
     }
 
+    private void getName(Document doc){
+        Elements nameList = doc.getElementsByClass("ui_header h1");
+        name = nameList.first().text();
+    }
 
-    public static void main(String[] args) throws IOException {
-        TripAdvisorRestaurantLoader loader = new TripAdvisorRestaurantLoader();
-        List<Restaurant> list = loader.load(0);
-        for(Restaurant i : list){
-            if(i.hasMenu()) {
-                System.out.println(i.getMenu().getUrl());
-            }
+    private void getTelephoneNumber(Document doc){
+        Elements numberList = doc.getElementsByClass("detail  is-hidden-mobile");
+        if (numberList.hasText()) {
+            telephoneNumber = numberList.first().text();
         }
     }
+
+    private void getStreet(Document doc) {
+        Elements streetList = doc.getElementsByClass("street-address");
+        if (streetList.hasText()) {
+            street = streetList.first().text();
+        }
+    }
+
+    private void getPrice(Document doc) {
+        Elements els = doc.getElementsByClass("restaurants-detail-overview-cards-DetailsSectionOverviewCard__tagText--1OH6h");
+        if(calculatePrice(els)) return;
+        els = doc.getElementsByClass("restaurants-details-card-TagCategories__tagText--Yt3iG");
+        if(calculatePrice(els)) return;
+    }
+
+    private boolean calculatePrice(Elements els) {
+        if(els.size()>0){
+            String text = els.first().text();
+            if(text.contains("€")){
+                String price = text.substring(0, text.indexOf("€", text.indexOf("-")) + 1); // Sometimes it has more details, not only price
+                minPrice = Integer.parseInt(price.substring(0, price.indexOf("€") - 1));
+                maxPrice = Integer.parseInt(price.substring(price.indexOf("-") + 2, price.length() - 2));
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

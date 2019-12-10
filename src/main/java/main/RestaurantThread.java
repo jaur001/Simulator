@@ -5,6 +5,7 @@ import restaurantLoader.RestaurantLoader;
 import restaurantLoader.TripAdvisorRestaurantLoader;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,7 @@ public class RestaurantThread extends Thread{
         try {
             list = loader.load(i);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error: Time Out exception");
         }
     }
 
