@@ -37,7 +37,7 @@ public class SimpleRoutineController implements RoutineController {
     private Map<Restaurant, Integer> selectRestaurants(Map<Restaurant, Integer> restaurantRoutines, Restaurant[] restaurants, int restaurantLength, int days) {
         Restaurant auxRestaurant;
         for (int i = 0; i < restaurantLength; i++) {
-            auxRestaurant = restaurants[(int) (Math.random() * (restaurants.length-1))];
+            auxRestaurant = restaurants[(int) Math.abs(Math.random() * (restaurants.length))];
             restaurantRoutines.put(auxRestaurant,days);
         }
 

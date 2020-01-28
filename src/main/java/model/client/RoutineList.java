@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class RoutineList {
     private double salary;
-    private Map<Restaurant,Integer> restaurantCount;
+    private Map<Restaurant,Integer> restaurantCount = new HashMap<Restaurant, Integer>();
     private Map<Restaurant,Integer> restaurantRoutines;
     //NormalDistribution restaurantLengthDistribution;
     //NormalDistribution restaurantPriceDistribution;
@@ -19,7 +19,7 @@ public class RoutineList {
         this.salary = salary;
         this.restaurantRoutines = restaurantRoutines;
         for(Restaurant i: restaurantRoutines.keySet()){
-            restaurantCount.put(i,restaurantCount.get(i));
+            restaurantCount.put(i,0);
         }
         setCountToZero();
     }
@@ -28,7 +28,7 @@ public class RoutineList {
         increaseCount();
         List<Restaurant> restaurantList = new ArrayList<Restaurant>();
         for (Restaurant i : restaurantRoutines.keySet()){
-            if(restaurantRoutines.get(i)==restaurantCount.get(i)){
+            if(restaurantRoutines.get(i)<restaurantCount.get(i)){
                 restaurantList.add(i);
                 setCountToZero(i);
             }
@@ -62,5 +62,16 @@ public class RoutineList {
 
     public Map<Restaurant, Integer> getRestaurantRoutine() {
         return restaurantRoutines;
+    }
+
+    public boolean checkRoutine(Restaurant restaurant){
+        return restaurantCount.get(restaurant) == restaurantRoutines.get(restaurant);
+    }
+
+    public void printCount() {
+        for(Restaurant i : restaurantRoutines.keySet()){
+            int j = restaurantRoutines.get(i) - restaurantCount.get(i);
+            System.out.println(i.getName() + ": " + j);
+        }
     }
 }

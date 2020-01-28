@@ -4,6 +4,8 @@ import model.restaurant.Plate;
 import model.restaurant.Restaurant;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 public class Client {
     private int NIF;
@@ -116,5 +118,9 @@ public class Client {
 
     public void pay(){
         restaurant.payBill(this);
+    }
+
+    public Map<Restaurant,Integer> getRestaurantRoutines(){
+        return this.getRoutineList().getRestaurantRoutine();
     }
 }
