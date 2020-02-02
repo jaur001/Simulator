@@ -1,16 +1,11 @@
 package main;
 
-import clientLoader.ClientLoader;
-import clientLoader.ClientLoaderCSV;
+import implementations.loaders.client.ClientLoaderCSV;
 import model.client.Client;
-import model.restaurant.Eating;
 import model.restaurant.Restaurant;
-import org.apache.commons.math3.distribution.NormalDistribution;
-import xmlBills.CFDIBillGenerator;
+import threads.BillThread;
+import threads.RestaurantThread;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 public class BillsMain {

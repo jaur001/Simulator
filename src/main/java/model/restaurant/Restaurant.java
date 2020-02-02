@@ -1,6 +1,7 @@
 package model.restaurant;
 
 import model.client.Client;
+import model.financialData.RestaurantFinancialData;
 import model.provider.Provider;
 
 import java.util.*;

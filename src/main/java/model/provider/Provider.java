@@ -1,6 +1,6 @@
 package model.provider;
 
-import model.restaurant.RestaurantFinancialData;
+import model.financialData.ProviderFinancialData;
 
 public class Provider {
     private Product product;
