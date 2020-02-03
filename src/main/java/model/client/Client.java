@@ -1,11 +1,12 @@
 package model.client;
 
+import model.client.routine.Routine;
+import model.client.routine.RoutineList;
 import model.restaurant.Plate;
 import model.restaurant.Restaurant;
 
 import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 public class Client {
     private int NIF;
@@ -18,7 +19,6 @@ public class Client {
     private String country;
     private String telephoneNumber;
     private String cardNumber;
-    private double salary;
     private RoutineList routineList;
 
     private Restaurant restaurant = null;
@@ -52,7 +52,6 @@ public class Client {
 
     public void setRoutineList(RoutineList routineList) {
         this.routineList = routineList;
-        this.salary = routineList.getSalary();
     }
 
     public int getNIF() {
@@ -120,7 +119,11 @@ public class Client {
         restaurant.payBill(this);
     }
 
-    public Map<Restaurant,Integer> getRestaurantRoutines(){
-        return this.getRoutineList().getRestaurantRoutine();
+    public List<Routine> getClientRoutines(){
+        return this.getRoutineList().getClientRoutines();
+    }
+
+    public double getSalary(){
+        return routineList.getSalary();
     }
 }

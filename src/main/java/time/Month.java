@@ -14,7 +14,6 @@ public class Month {
 
     public boolean passTime(List<Restaurant> restaurantList, List<Client> clientList, List<Provider> providerList) {
         if(monthDays[actualDay-1].passTime(restaurantList,clientList,providerList)){
-            updateRoutines(clientList);
             actualDay = ++actualDay>lastDay?1 : actualDay;
             System.out.println("New Day: " + actualDay);
             return actualDay==1;
@@ -22,11 +21,6 @@ public class Month {
         return false;
     }
 
-    private void updateRoutines(List<Client> clientList) {
-        for (Client i : clientList){
-            i.getRoutineList().countDown();
-        }
-    }
 
     public void initialize() {
         for (int i = 0; i < monthDays.length; i++) {

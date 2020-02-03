@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface RoutinesLoader {
-    List<Client> load(NormalDistribution salaryDistribution,
-                      List<Restaurant> restaurantList,
+    List<Client> load(List<Restaurant> restaurantList,
                       List<Client> clientList,
                       Map<Integer,Integer> salaryGroups,
                       int restaurantLength);

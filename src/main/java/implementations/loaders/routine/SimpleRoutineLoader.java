@@ -1,9 +1,10 @@
 package implementations.loaders.routine;
 
 import model.client.Client;
-import model.client.RoutineList;
+import model.client.routine.Routine;
+import model.client.routine.RoutineList;
 import model.restaurant.Restaurant;
-import org.apache.commons.math3.distribution.NormalDistribution;
+import utils.Utils;
 import view.loaders.routine.RoutinesLoader;
 
 import java.util.ArrayList;
@@ -11,19 +12,18 @@ import java.util.List;
 import java.util.Map;
 
 public class SimpleRoutineLoader implements RoutinesLoader {
-    public List<Client> load(NormalDistribution salaryDistribution, List<Restaurant> restaurantList, List<Client> clientList, Map<Integer,Integer> salaryGroups, int restaurantRoutineLengthPerClient) {
-        List<Client> auxList = new ArrayList<Client>();
+    public List<Client> load(List<Restaurant> restaurantList, List<Client> clientList, Map<Integer,Integer> salaryGroups, int restaurantRoutineLengthPerClient) {
+        List<Client> auxList = new ArrayList<>();
         for(Client i : clientList){
-            //double salary = salaryDistribution.sample();
-            double salary = (Math.random() * ((7000 - 1000) + 1)) + 1000;
+            double salary = Utils.getSalarySample();
             setRoutineToClient(restaurantList, salaryGroups, restaurantRoutineLengthPerClient, auxList, i, salary);
         }
         return auxList;
     }
 
-    private void setRoutineToClient(List<Restaurant> restaurantList, Map<Integer, Integer> salaryGroups, int restaurantRoutineLengthPerClient, List<Client> auxList, Client i, double salary) {
-        Map<Restaurant,Integer> restaurantRoutines = new SimpleRoutineController().addRoutines(salary,restaurantList,salaryGroups,restaurantRoutineLengthPerClient);
-        i.setRoutineList(new RoutineList(salary, restaurantRoutines));
-        auxList.add(i);
+    private void setRoutineToClient(List<Restaurant> restaurantList, Map<Integer, Integer> salaryGroups, int restaurantRoutineLengthPerClient, List<Client> auxList, Client client, double salary) {
+        List<Routine> restaurantRoutines = new SimpleRoutineController().addRoutines(salary,restaurantList,salaryGroups,restaurantRoutineLengthPerClient);
+        client.setRoutineList(new RoutineList(salary, restaurantRoutines));
+        auxList.add(client);
     }
 }

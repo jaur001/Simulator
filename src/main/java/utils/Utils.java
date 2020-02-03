@@ -31,9 +31,9 @@ public class Utils {
 
 
     public static Map<Integer,Integer> getRestaurantGroupsTable(){
-        Map<Integer,Integer> restaurantGroup = new HashMap<Integer, Integer>();
-        Integer salaries[] = {1500,3000,5000,7000};
-        Integer prices[] = {15,30,50,70};
+        Map<Integer,Integer> restaurantGroup = new HashMap<>();
+        Integer[] salaries = {1500,3000,5000,7000};
+        Integer[] prices = {15,30,50,70};
         for (int i = 0; i < salaries.length; i++) {
             restaurantGroup.put(salaries[i],prices[i]);
         }
@@ -56,7 +56,19 @@ public class Utils {
         return sample<1? 1: sample;
     }
 
-    public static double getPriceSample(double mean, Restaurant restaurant){
+    public static double platePriceMean(double min, double max){
+        return mean(new double[]{min,max});
+    }
+
+    public static double getPriceSample(Restaurant restaurant,int plateNumber, int invitedPeople){
+        double mean = platePriceMean(restaurant.getMinPricePlate(),restaurant.getMaxPricePlate());
+        return (restaurant.getMaxPricePlate()==restaurant.getMinPricePlate()? mean :
+                Utils.getPlatePriceSample(restaurant)) * plateNumber * invitedPeople;
+
+    }
+
+    public static double getPlatePriceSample(Restaurant restaurant){
+        double mean = platePriceMean(restaurant.getMinPricePlate(),restaurant.getMaxPricePlate());
         return Math.abs(new NormalDistribution(mean,restaurant.getMaxPricePlate()-mean).sample());
     }
 

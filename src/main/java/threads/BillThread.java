@@ -33,10 +33,8 @@ public class BillThread extends Thread{
         double amount;
         int invitedPeople = 4;
         for(Client j : clientList) {
-            mean = Utils.mean(new double[]{(double)restaurant.getMaxPricePlate(),(double)restaurant.getMinPricePlate()});
             plateNumber = Utils.getPlateNumberSample();
-            amount = (restaurant.getMaxPricePlate()==restaurant.getMinPricePlate()? mean :
-                    Utils.getPriceSample(mean,restaurant)) * plateNumber * invitedPeople;
+            amount = Utils.getPriceSample(restaurant,(int)plateNumber,invitedPeople);
             new CFDIBillGenerator().generateBill(new Eating(restaurant,j,new Date(),new Bill(amount),invitedPeople),url);
         }
     }

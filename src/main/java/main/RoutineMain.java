@@ -25,8 +25,8 @@ public class RoutineMain {
         List<Client> clientList = new ClientLoaderCSV().load(urlClient,rowNumber);
         Map<Integer,Integer> restaurantGroups = Utils.getRestaurantGroupsTable();
         RoutinesLoader loader = new SimpleRoutineLoader();
-        clientList = loader.load(new NormalDistribution(),restaurantList,clientList,restaurantGroups,restaurantRoutineLengthPerClient);
-        Time time = new Time(restaurantList,clientList,new ArrayList<Provider>());
+        clientList = loader.load(restaurantList,clientList,restaurantGroups,restaurantRoutineLengthPerClient);
+        Time time = new Time(restaurantList,clientList,new ArrayList<>());
         while(true){
             time.play();
             for (Client i : clientList) {
