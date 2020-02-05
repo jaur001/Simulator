@@ -19,7 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CFDIBillGenerator implements BillGenerator {
     private static final AtomicInteger billsCount = new AtomicInteger();
+
     public void generateBill(Eating eating, String url){
+        System.out.println("New Bill");
         try {
             appendData(eating, url);
 

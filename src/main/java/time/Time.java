@@ -27,11 +27,4 @@ public class Time {
             System.out.println("New Year: " + actualYear);
         }
     }
-
-    public static void main(String[] args) {
-        Time time = new Time(new ArrayList<Restaurant>(),new ArrayList<Client>(), new ArrayList<Provider>());
-        while (true){
-            time.play();
-        }
-    }
 }

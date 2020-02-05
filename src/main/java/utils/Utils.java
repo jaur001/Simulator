@@ -8,8 +8,11 @@ import java.util.Map;
 
 public class Utils {
 
-    private static final NormalDistribution salaryDistribution = new NormalDistribution(1717,979.28);
-    private static final NormalDistribution plateNumberDistribution = new NormalDistribution(2,0.7);
+    public static final int SALARY_MEAN = 1717;
+    public static final int PLATE_NUMBER_MEAN = 2;
+    public static final int NUMBER_PEOPLE_MEAN = 4;
+    private static final NormalDistribution salaryDistribution = new NormalDistribution(SALARY_MEAN,979.28);
+    private static final NormalDistribution plateNumberDistribution = new NormalDistribution(PLATE_NUMBER_MEAN,0.7);
 
     public static double mean (double[] data){
         double sum = 0.0;
@@ -56,6 +59,14 @@ public class Utils {
         return sample<1? 1: sample;
     }
 
+    public static double getPlateNumberMean(){
+        return plateNumberDistribution.getMean();
+    }
+
+    public static int getNumberPeopleMean(){
+        return NUMBER_PEOPLE_MEAN;
+    }
+
     public static double platePriceMean(double min, double max){
         return mean(new double[]{min,max});
     }
@@ -73,17 +84,4 @@ public class Utils {
     }
 
 
-
-    public static void main(String[] args) {
-        int count = 0;
-        int count2 = 0;
-        int count3 = 0;
-        int count4 = 0;
-        double sample = 0;
-        NormalDistribution normalDistribution = new NormalDistribution(1717,979.28);
-        for (int i = 0; i < 100; i++) {
-            sample = Math.max(normalDistribution.sample(),sample);
-        }
-        System.out.println(sample);
-    }
 }

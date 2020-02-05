@@ -4,7 +4,6 @@ import model.client.Client;
 import model.restaurant.Bill;
 import model.restaurant.Eating;
 import model.restaurant.Restaurant;
-import org.apache.commons.math3.distribution.NormalDistribution;
 import implementations.xmlBills.CFDIBillGenerator;
 import utils.Utils;
 
@@ -28,15 +27,20 @@ public class BillThread extends Thread{
 
     @Override
     public void run(){
-        double mean;
         double plateNumber;
         double amount;
         int invitedPeople = 4;
         for(Client j : clientList) {
-            plateNumber = Utils.getPlateNumberSample();
-            amount = Utils.getPriceSample(restaurant,(int)plateNumber,invitedPeople);
-            new CFDIBillGenerator().generateBill(new Eating(restaurant,j,new Date(),new Bill(amount),invitedPeople),url);
+            getBill(invitedPeople, j);
         }
+    }
+
+    private void getBill(int invitedPeople, Client j) {
+        double plateNumber;
+        double amount;
+        plateNumber = Utils.getPlateNumberSample();
+        amount = Utils.getPriceSample(restaurant,(int)plateNumber,invitedPeople);
+        new CFDIBillGenerator().generateBill(new Eating(restaurant,j,new Date(),new Bill(amount),invitedPeople),url);
     }
 
     public static void executeThreads(BillThread[] threads,List<Restaurant> restaurantList, List<Client> clientList, String url){
@@ -44,7 +48,10 @@ public class BillThread extends Thread{
             threads[i] = new BillThread(restaurantList.get(i),clientList,url);
             threads[i].start();
         }
+        joinThreads(threads);
+    }
 
+    private static void joinThreads(BillThread[] threads) {
         for (BillThread thread : threads) {
             try {
                 thread.join();

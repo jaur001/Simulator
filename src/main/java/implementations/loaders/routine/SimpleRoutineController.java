@@ -10,21 +10,15 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class SimpleRoutineController implements RoutineController {
-    private int maxDays = 7;
-    private double maxSalary = 10000;
-    private int maxPrice = 60;
 
     public List<Routine> addRoutines(double salary, List<Restaurant> restaurantList,
                                                 Map<Integer,Integer> salaryGroups, int restaurantRoutineLengthPerClient) {
 
         List<Integer> auxList = new ArrayList<>(salaryGroups.keySet());
-        for(Integer salaryOption : auxList){
-            if(salary<= salaryOption){
-                return addToSalaryGroup(salary, restaurantRoutineLengthPerClient, salaryOption, getRestaurantOptions(salaryGroups.get(salaryOption), restaurantList));
-            }
-        }
-        int lastSalaryOption = auxList.get(auxList.size() - 1);
-        return addToSalaryGroup(salary, restaurantRoutineLengthPerClient, lastSalaryOption,  getRestaurantOptions(salaryGroups.get(lastSalaryOption), restaurantList));
+        int salaryGroup = auxList.stream()
+                .filter(salaryAuxOption -> salary<=salaryAuxOption)
+                .findFirst().orElse(auxList.get(auxList.size() - 1));
+        return addToSalaryGroup(salary, restaurantRoutineLengthPerClient, salaryGroup, getRestaurantOptions(salaryGroups.get(salaryGroup), restaurantList));
     }
 
     private Restaurant[] getRestaurantOptions(int price, List<Restaurant> restaurantList){
@@ -33,19 +27,19 @@ public class SimpleRoutineController implements RoutineController {
                 .toArray(Restaurant[]::new);
     }
 
-    private List<Routine> addToSalaryGroup(double salary, int restaurantLength, Integer salaryOption, Restaurant[] restaurantOptions) {
+    private List<Routine> addToSalaryGroup(double salary, int restaurantRoutineLengthPerClient, Integer salaryOption, Restaurant[] restaurantOptions) {
         int days = selectDays(salary, salaryOption);
-        return selectRestaurants(restaurantOptions, restaurantLength, days);
+        return selectRestaurants(restaurantOptions, restaurantRoutineLengthPerClient, days);
     }
 
 
     private int selectDays(double salary, double salaryOption) {
-        return Utils.Random(1,7);
+        return Utils.Random(1,2);
     }
 
-    private List<Routine> selectRestaurants(Restaurant[] restaurants, int restaurantLength, int days) {
+    private List<Routine> selectRestaurants(Restaurant[] restaurants, int restaurantRoutineLengthPerClient, int days) {
         List<Routine> restaurantRoutines = new ArrayList<>();
-        IntStream.range(0,restaurantLength)
+        IntStream.range(0,restaurantRoutineLengthPerClient)
                 .forEach((i) -> restaurantRoutines.add(new Routine(getRandomRestaurant(restaurants),new Counter(days))));
         return restaurantRoutines;
     }

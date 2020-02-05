@@ -3,6 +3,7 @@ package model.restaurant;
 import model.client.Client;
 import model.financialData.RestaurantFinancialData;
 import model.provider.Provider;
+import utils.Utils;
 
 import java.util.*;
 
@@ -158,6 +159,10 @@ public class Restaurant {
                 System.out.println("ERROR: Client " + i.getClient() + " not found in any eating of the list of the restaurant!");
             }
         }
+    }
+
+    public double getPricePlateMean(){
+        return Utils.platePriceMean(this.getMinPricePlate(),this.getMaxPricePlate());
     }
 
 

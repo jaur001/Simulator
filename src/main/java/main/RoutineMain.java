@@ -5,9 +5,7 @@ import model.client.Client;
 import threads.RestaurantThread;
 import view.loaders.routine.RoutinesLoader;
 import implementations.loaders.routine.SimpleRoutineLoader;
-import model.provider.Provider;
 import model.restaurant.Restaurant;
-import org.apache.commons.math3.distribution.NormalDistribution;
 import time.Time;
 import utils.Utils;
 
@@ -19,9 +17,9 @@ public class RoutineMain {
     public static void main(String[] args) {
         int count = 1;
         int rowNumber = 1;
-        int restaurantRoutineLengthPerClient = 1;
+        int restaurantRoutineLengthPerClient = 2;
         String urlClient = "./clientsFile/ExportCSV.csv";
-        List<Restaurant> restaurantList = RestaurantThread.mergeLists(new RestaurantThread[count]);
+        List<Restaurant> restaurantList = RestaurantThread.loadRestaurantsPage(count);
         List<Client> clientList = new ClientLoaderCSV().load(urlClient,rowNumber);
         Map<Integer,Integer> restaurantGroups = Utils.getRestaurantGroupsTable();
         RoutinesLoader loader = new SimpleRoutineLoader();

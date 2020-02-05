@@ -46,6 +46,32 @@ public class Client {
         this.cardNumber = data[9];
     }
 
+    public void pay(double amount){
+        this.getRoutineList().decreaseBudget(amount);
+    }
+
+    public boolean isClient(Restaurant restaurant){
+        return this.restaurant.getName().equals(restaurant.getName());
+    }
+
+    public boolean chooseRestaurantToEat(Restaurant restaurant){
+        int invitedPeople = 4;
+        return restaurant.newClient(this, invitedPeople);
+    }
+
+    public void order(Plate plate){
+        restaurant.addOrder(plate,this);
+    }
+
+
+    public List<Routine> getClientRoutines(){
+        return this.getRoutineList().getClientRoutines();
+    }
+
+    public double getSalary(){
+        return routineList.getSalary();
+    }
+
     public RoutineList getRoutineList() {
         return routineList;
     }
@@ -102,28 +128,4 @@ public class Client {
         this.restaurant = restaurant;
     }
 
-    public boolean isClient(Restaurant restaurant){
-        return this.restaurant.getName().equals(restaurant.getName());
-    }
-
-    public boolean chooseRestaurantToEat(Restaurant restaurant){
-        int invitedPeople = 4;
-        return restaurant.newClient(this, invitedPeople);
-    }
-
-    public void order(Plate plate){
-        restaurant.addOrder(plate,this);
-    }
-
-    public void pay(){
-        restaurant.payBill(this);
-    }
-
-    public List<Routine> getClientRoutines(){
-        return this.getRoutineList().getClientRoutines();
-    }
-
-    public double getSalary(){
-        return routineList.getSalary();
-    }
 }

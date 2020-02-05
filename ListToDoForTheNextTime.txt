@@ -1,0 +1,4 @@
+- Las rutinas no funcionan si pongo mas de un restaurante por persona.
+- El ID de la factura debe coger el siguiente al ultimo de la carpeta.
+- Cada restaurant de la factura necesita un dia distinto.
+- el dia de la rutina tiene que cambiar en cada ciclo.

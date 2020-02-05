@@ -14,7 +14,7 @@ public class BillsMain {
         int rowNumber = 30;
         String urlClient = "./clientsFile/ExportCSV.csv";
         String urlBill = "./xmlFiles/";
-        List <Restaurant> restaurantList = RestaurantThread.mergeLists(new RestaurantThread[count]);
+        List <Restaurant> restaurantList = RestaurantThread.loadRestaurantsPage(count);
         List<Client> clientList = new ClientLoaderCSV().load(urlClient,rowNumber);
         BillThread.executeThreads(new BillThread[restaurantList.size()],restaurantList,clientList,urlBill);
     }

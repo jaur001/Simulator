@@ -1,14 +1,9 @@
 package time;
 
-import implementations.xmlBills.CFDIBillGenerator;
 import model.client.Client;
 import model.provider.Provider;
-import model.restaurant.Bill;
-import model.restaurant.Eating;
 import model.restaurant.Restaurant;
-import utils.Utils;
-
-import java.util.Date;
+import threads.RoutineCheckerThread;
 import java.util.List;
 
 public class Day {
@@ -30,13 +25,7 @@ public class Day {
     }
 
     private void receiveClients(List<Client> clientList) {
-        clientList.forEach(client -> client.getRoutineList().checkRoutines()
-                        .forEach(restaurantToEat -> getBill(client,restaurantToEat)));
-    }
-
-    private void getBill(Client i, Restaurant j) {
-        double amount = Utils.getPriceSample(j,(int)Utils.getPlateNumberSample(),4);
-        new CFDIBillGenerator().generateBill(new Eating(j,i,new Date(),new Bill(amount),4),"./xmlFiles/");
+        RoutineCheckerThread.executeThreads(clientList);
     }
 
     public void initialize() {
