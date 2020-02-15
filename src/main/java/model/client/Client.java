@@ -2,8 +2,8 @@ package model.client;
 
 import model.client.routine.Routine;
 import model.client.routine.RoutineList;
-import model.restaurant.Plate;
 import model.restaurant.Restaurant;
+import utils.BillsUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -14,30 +14,31 @@ public class Client {
     private String lastName;
     private String email;
     private String gender;
-    private Date birthdate;
+    private Date birthDate;
     private String job;
     private String country;
     private String telephoneNumber;
     private String cardNumber;
+
     private RoutineList routineList;
-
     private Restaurant restaurant = null;
+    private int commensalNumber;
 
 
-    public Client(int NIF, String firstName, String lastName, String email, String gender, String birthdate) {
+    public Client(int NIF, String firstName, String lastName, String email, String gender, String birthDate) {
         this.NIF = NIF;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.gender = gender;
-        this.birthdate = new Date(birthdate);
+        this.birthDate = new Date(birthDate);
     }
 
     public Client(String[] data) {
         this.NIF = Integer.parseInt(data[0]);
         this.firstName = data[1];
         this.lastName = data[2];
-        this.birthdate = new Date(data[3]);
+        this.birthDate = new Date(data[3]);
         this.gender = data[4];
         this.job = data[5];
         this.country = data[6];
@@ -50,18 +51,7 @@ public class Client {
         this.getRoutineList().decreaseBudget(amount);
     }
 
-    public boolean isClient(Restaurant restaurant){
-        return this.restaurant.getName().equals(restaurant.getName());
-    }
 
-    public boolean chooseRestaurantToEat(Restaurant restaurant){
-        int invitedPeople = 4;
-        return restaurant.newClient(this, invitedPeople);
-    }
-
-    public void order(Plate plate){
-        restaurant.addOrder(plate,this);
-    }
 
 
     public List<Routine> getClientRoutines(){
@@ -78,6 +68,11 @@ public class Client {
 
     public void setRoutineList(RoutineList routineList) {
         this.routineList = routineList;
+    }
+
+    public int howManyCommensals() {
+        commensalNumber = BillsUtils.getNumberPeopleSample();
+        return commensalNumber;
     }
 
     public int getNIF() {
@@ -116,8 +111,8 @@ public class Client {
         return gender;
     }
 
-    public Date getBirthdate() {
-        return birthdate;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
     public Restaurant getRestaurant() {
@@ -128,4 +123,12 @@ public class Client {
         this.restaurant = restaurant;
     }
 
+    public int getCommensalNumber() {
+        return commensalNumber;
+    }
+
+    public void printRoutines(){
+        System.out.print("Client: "+ this.getLastName() + " ->    ");
+        this.routineList.printCount();
+    }
 }

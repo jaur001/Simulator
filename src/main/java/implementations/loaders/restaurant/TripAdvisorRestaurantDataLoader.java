@@ -3,15 +3,15 @@ package implementations.loaders.restaurant;
 import model.restaurant.Restaurant;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import utils.Utils;
+import utils.MathUtils;
 import view.loaders.restaurant.RestaurantDataLoader;
 
 public class TripAdvisorRestaurantDataLoader implements RestaurantDataLoader {
 
-    public static final int MIN_MIN = 5;
-    public static final int MIN_MAX = 15;
-    public static final int MAX_MIN = 20;
-    public static final int MAX_MAX = 50;
+    public static final int MINPRICE_MIN = 5;
+    public static final int MINPRICE_MAX = 15;
+    public static final int MAXPRICE_MIN = 20;
+    public static final int MAXPRICE_MAX = 50;
     public static final String NAME = "ui_header h1";
     public static final String TELEPHONE = "detail  is-hidden-mobile";
     public static final String STREET = "street-address";
@@ -29,11 +29,11 @@ public class TripAdvisorRestaurantDataLoader implements RestaurantDataLoader {
     }
 
     private PriceRange addRandomPrice() {
-        return new PriceRange(generatePrice(MIN_MIN, MIN_MAX),generatePrice(MAX_MIN, MAX_MAX));
+        return new PriceRange(generatePrice(MINPRICE_MIN, MINPRICE_MAX),generatePrice(MAXPRICE_MIN, MAXPRICE_MAX));
     }
 
     private int generatePrice(int min,int max){
-        return Utils.Random(min, max);
+        return MathUtils.random(min, max);
     }
 
 

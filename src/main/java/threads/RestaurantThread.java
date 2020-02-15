@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class RestaurantThread extends Thread{
-    private List<Restaurant> list = new ArrayList<Restaurant>();
+    private List<Restaurant> list = new ArrayList<>();
     private int i;
 
-    public RestaurantThread(int i) {
+    private RestaurantThread(int i) {
         this.i = i;
     }
 
@@ -34,24 +34,27 @@ public class RestaurantThread extends Thread{
     }
 
     public static List<Restaurant> loadRestaurantsPage(int threadsCount){
-        List<Restaurant> auxList = new ArrayList<>();
-        RestaurantThread[] restaurantThreads = executeThreads(threadsCount);
+        RestaurantThread[] restaurantThreads = getThreads(threadsCount);
+        startThreads(restaurantThreads);
         joinThreads(restaurantThreads);
-        addRestaurantsToFinalList(restaurantThreads, auxList);
-        List<Restaurant> finalList = new ArrayList<Restaurant>(new HashSet<>(auxList));
-        return finalList;
+        List<Restaurant> pageList = new ArrayList<>();
+        addRestaurantsToFinalList(restaurantThreads, pageList);
+        return new ArrayList<Restaurant>(new HashSet<>(pageList));
     }
 
-    private static RestaurantThread[] executeThreads(int threadsCount) {
+    private static RestaurantThread[] getThreads(int threadsCount) {
         return IntStream.range(0,threadsCount).boxed()
-                .map(RestaurantThread::executeThread)
-                .toArray(size -> new RestaurantThread[size]);
+                .map(RestaurantThread::getThread)
+                .toArray(RestaurantThread[]::new);
     }
 
-    private static RestaurantThread executeThread(int pos) {
-        RestaurantThread thread = new RestaurantThread(pos);
-        thread.start();
-        return thread;
+    private static RestaurantThread getThread(int pos) {
+        return new RestaurantThread(pos);
+    }
+
+    private static void startThreads(RestaurantThread[] threads) {
+        IntStream.range(0,threads.length)
+                .forEach(pos -> threads[pos].start());
     }
 
     private static void addRestaurantsToFinalList(RestaurantThread[] threads, List<Restaurant> auxList) {

@@ -3,7 +3,7 @@ package time;
 import model.client.Client;
 import model.provider.Provider;
 import model.restaurant.Restaurant;
-
+import threads.SalaryThread;
 import java.util.List;
 
 public class Year {
@@ -17,9 +17,14 @@ public class Year {
         if(yearMonths[actualMonth-1].passTime(restaurantList,clientList,providerList)){
             actualMonth = ++actualMonth>lastMonth?1 : actualMonth;
             System.out.println("New Month: " + actualMonth);
+            enterSalaryToClients(clientList);
             return actualMonth==1;
         }
         return false;
+    }
+
+    private void enterSalaryToClients(List<Client> clientList) {
+        SalaryThread.executeThreads(clientList);
     }
 
     public void initialize() {

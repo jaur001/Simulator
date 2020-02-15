@@ -21,14 +21,12 @@ public class CFDIBillGenerator implements BillGenerator {
     private static final AtomicInteger billsCount = new AtomicInteger();
 
     public void generateBill(Eating eating, String url){
-        System.out.println("New Bill");
+        System.out.println("New Bill -> " + "Client : " + eating.getClient().getFirstName() + ", Restaurant: " + eating.getRestaurant().getName() + ", amount: " + eating.getBill().getFinalPrice());
         try {
             appendData(eating, url);
 
-        } catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
         }
 
     }
@@ -42,10 +40,33 @@ public class CFDIBillGenerator implements BillGenerator {
         saveXMLInFile(eating, url, doc);
     }
 
-    private void appendDetails(Eating eating, Document doc, Element bill) {
-        appendAmount(eating, doc, bill);
-        appendDate(eating,doc, bill);
-        appendCommensalNumber(eating, doc, bill);
+    private Document getXMLDocument() throws ParserConfigurationException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        return docBuilder.newDocument();
+    }
+
+    private Element appendTagName(Document doc) {
+        Element bill = doc.createElement("cfdi:Bill");
+        doc.appendChild(bill);
+        return bill;
+    }
+
+    private void appendRestaurantData(Eating eating, Document doc, Element bill) {
+        appendRestaurantName(eating, doc, bill);
+        appendRestaurantNIF(eating, doc, bill);
+    }
+
+    private void appendRestaurantNIF(Eating eating, Document doc, Element bill) {
+        Element restaurantNIF = doc.createElement("ReceiverNIF");
+        bill.appendChild(restaurantNIF);
+        restaurantNIF.setTextContent(Integer.toString(eating.getRestaurant().getNIF()));
+    }
+
+    private void appendRestaurantName(Eating eating, Document doc, Element bill) {
+        Element restaurantName = doc.createElement("ReceiverName");
+        bill.appendChild(restaurantName);
+        restaurantName.setTextContent(eating.getRestaurant().getName());
     }
 
     private void appendClientData(Eating eating, Document doc, Element bill) {
@@ -53,9 +74,41 @@ public class CFDIBillGenerator implements BillGenerator {
         appendClientNIF(eating, doc, bill);
     }
 
-    private void appendRestaurantData(Eating eating, Document doc, Element bill) {
-        appendRestaurantName(eating, doc, bill);
-        appendRestaurantNIF(eating, doc, bill);
+    private void appendClientName(Eating eating, Document doc, Element bill) {
+        Element clientName = doc.createElement("TransmitterFullName");
+        clientName.setTextContent(eating.getClient().getFirstName() + " " + eating.getClient().getLastName());
+        bill.appendChild(clientName);
+    }
+
+
+    private void appendClientNIF(Eating eating, Document doc, Element bill) {
+        Element clientNIF = doc.createElement("TransmitterNIF");
+        clientNIF.setTextContent(Integer.toString(eating.getClient().getNIF()));
+        bill.appendChild(clientNIF);
+    }
+
+    private void appendDetails(Eating eating, Document doc, Element bill) {
+        appendAmount(eating, doc, bill);
+        appendDate(eating,doc, bill);
+        appendCommensalNumber(eating, doc, bill);
+    }
+
+    private void appendAmount(Eating eating, Document doc, Element bill) {
+        Element amount = doc.createElement("Amount");
+        amount.setTextContent(Double.toString(eating.getBill().getFinalPrice()));
+        bill.appendChild(amount);
+    }
+
+    private void appendDate(Eating eating, Document doc, Element bill) {
+        Element date = doc.createElement("Date");
+        date.setTextContent(eating.getDate().toString());
+        bill.appendChild(date);
+    }
+
+    private void appendCommensalNumber(Eating eating, Document doc, Element bill) {
+        Element commensal = doc.createElement("CommensalNumber");
+        commensal.setTextContent(Integer.toString(eating.getInvitedPeople()));
+        bill.appendChild(commensal);
     }
 
     private void saveXMLInFile(Eating eating, String url, Document doc) throws TransformerException {
@@ -68,59 +121,5 @@ public class CFDIBillGenerator implements BillGenerator {
     private Transformer getTransformer() throws TransformerConfigurationException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         return transformerFactory.newTransformer();
-    }
-
-    private void appendClientNIF(Eating eating, Document doc, Element bill) {
-        Element clientNIF = doc.createElement("ClientNIF");
-        clientNIF.setTextContent(Integer.toString(eating.getClient().getNIF()));
-        bill.appendChild(clientNIF);
-    }
-
-    private void appendClientName(Eating eating, Document doc, Element bill) {
-        Element clientName = doc.createElement("ClientName");
-        clientName.setTextContent(eating.getClient().getFirstName());
-        bill.appendChild(clientName);
-    }
-
-    private void appendCommensalNumber(Eating eating, Document doc, Element bill) {
-        Element commensal = doc.createElement("CommensalNumber");
-        commensal.setTextContent(Integer.toString(eating.getInvitedPeople()));
-        bill.appendChild(commensal);
-    }
-
-    private void appendDate(Eating eating, Document doc, Element bill) {
-        Element date = doc.createElement("Date");
-        date.setTextContent(eating.getDate().toString());
-        bill.appendChild(date);
-    }
-
-    private void appendAmount(Eating eating, Document doc, Element bill) {
-        Element amount = doc.createElement("Amount");
-        amount.setTextContent(Double.toString(eating.getBill().getFinalPrice()));
-        bill.appendChild(amount);
-    }
-
-    private void appendRestaurantNIF(Eating eating, Document doc, Element bill) {
-        Element restaurantNIF = doc.createElement("RestaurantNIF");
-        bill.appendChild(restaurantNIF);
-        restaurantNIF.setTextContent(Integer.toString(eating.getRestaurant().getNIF()));
-    }
-
-    private void appendRestaurantName(Eating eating, Document doc, Element bill) {
-        Element restaurantName = doc.createElement("RestaurantName");
-        bill.appendChild(restaurantName);
-        restaurantName.setTextContent(eating.getRestaurant().getName());
-    }
-
-    private Element appendTagName(Document doc) {
-        Element bill = doc.createElement("cfdi:Bill");
-        doc.appendChild(bill);
-        return bill;
-    }
-
-    private Document getXMLDocument() throws ParserConfigurationException {
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        return docBuilder.newDocument();
     }
 }

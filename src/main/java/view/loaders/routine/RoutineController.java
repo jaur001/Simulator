@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface RoutineController {
-    List<Routine> addRoutines(double salary, List<Restaurant> restaurantList, Map<Integer, Integer> salaryGroups, int restaurantLength);
+    List<Routine> createRoutineList(double salary, List<Restaurant> restaurantList);
+    void addRoutine(double salary, List<Restaurant> restaurantList, List<Routine> restaurantRoutines);
+    void deleteRoutine(Routine routine, List<Routine> restaurantRoutines);
 }

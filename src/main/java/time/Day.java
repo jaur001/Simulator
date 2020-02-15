@@ -11,7 +11,7 @@ public class Day {
     private int actualHour = 0;
     private static final int lastHour = 23;
 
-    private int holidayDayCount = 0;
+    private int holidayDayCount = 1;
     private static final int holidayDay = 7;
     private boolean isHolidayDay = false;
 
@@ -19,9 +19,14 @@ public class Day {
     public boolean passTime(List<Restaurant> restaurantList, List<Client> clientList, List<Provider> providerList) {
         dayHours[actualHour].passTime(restaurantList,clientList,providerList);
         actualHour = ++actualHour>lastHour?0 : actualHour;
-        isHolidayDay = ++holidayDayCount == holidayDay;
-        if(actualHour == 1) receiveClients(clientList);
+        isHolidayDay = isHolidayDay();
+        if(actualHour == 0) receiveClients(clientList);
         return actualHour==0;
+    }
+
+    private boolean isHolidayDay() {
+        holidayDayCount = ++holidayDayCount==holidayDay? 0: holidayDayCount;
+        return holidayDayCount == 0;
     }
 
     private void receiveClients(List<Client> clientList) {

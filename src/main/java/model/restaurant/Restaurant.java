@@ -3,7 +3,7 @@ package model.restaurant;
 import model.client.Client;
 import model.financialData.RestaurantFinancialData;
 import model.provider.Provider;
-import utils.Utils;
+import utils.MathUtils;
 
 import java.util.*;
 
@@ -28,9 +28,8 @@ public class Restaurant {
 
     private int numberWorkers;
     private RestaurantFinancialData data;
-    private List<Provider> providersList = new ArrayList<Provider>();
-    private List<Eating> eatingList = new ArrayList<Eating>();
-    private List<PlateOrder> orders = new ArrayList<PlateOrder>();
+    private List<Provider> providersList = new ArrayList<>();
+    private List<Eating> eatingList = new ArrayList<>();
 
 
 
@@ -144,25 +143,8 @@ public class Restaurant {
        return null;
     }
 
-    public void addOrder(Plate plate, Client client){
-        orders.add(new PlateOrder(plate, client));
-        System.out.println("Plate ordered");
-    }
-
-    public void completeOrders(){
-        for(PlateOrder i : orders){
-            try{
-                searchClient(i.getClient()).getBill().addPlateToBill(i.getPlate());
-                System.out.println("Orders completed");
-                orders = new ArrayList<PlateOrder>();
-            } catch (NullPointerException e){
-                System.out.println("ERROR: Client " + i.getClient() + " not found in any eating of the list of the restaurant!");
-            }
-        }
-    }
-
     public double getPricePlateMean(){
-        return Utils.platePriceMean(this.getMinPricePlate(),this.getMaxPricePlate());
+        return MathUtils.twoNumberMean(this.getMinPricePlate(),this.getMaxPricePlate());
     }
 
 

@@ -5,7 +5,7 @@ import model.restaurant.Bill;
 import model.restaurant.Eating;
 import model.restaurant.Restaurant;
 import implementations.xmlBills.CFDIBillGenerator;
-import utils.Utils;
+import utils.BillsUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -27,8 +27,6 @@ public class BillThread extends Thread{
 
     @Override
     public void run(){
-        double plateNumber;
-        double amount;
         int invitedPeople = 4;
         for(Client j : clientList) {
             getBill(invitedPeople, j);
@@ -38,8 +36,8 @@ public class BillThread extends Thread{
     private void getBill(int invitedPeople, Client j) {
         double plateNumber;
         double amount;
-        plateNumber = Utils.getPlateNumberSample();
-        amount = Utils.getPriceSample(restaurant,(int)plateNumber,invitedPeople);
+        plateNumber = BillsUtils.getPlateNumberSample();
+        amount = BillsUtils.getPriceApproximation(restaurant,(int)plateNumber,invitedPeople);
         new CFDIBillGenerator().generateBill(new Eating(restaurant,j,new Date(),new Bill(amount),invitedPeople),url);
     }
 

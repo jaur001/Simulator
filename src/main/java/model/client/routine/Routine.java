@@ -22,4 +22,8 @@ public class Routine {
     public int getCount() {
         return counter.getCount();
     }
+
+    public void setCounter(Counter counter) {
+        this.counter = counter;
+    }
 }
