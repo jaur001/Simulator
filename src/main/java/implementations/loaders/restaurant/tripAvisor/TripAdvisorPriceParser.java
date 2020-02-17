@@ -1,4 +1,4 @@
-package implementations.loaders.restaurant;
+package implementations.loaders.restaurant.tripAvisor;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;

@@ -28,6 +28,10 @@ public class RoutineList {
         return restaurantRoutines;
     }
 
+    public void setClientRoutines(List<Routine> restaurantRoutines) {
+        this.restaurantRoutines = restaurantRoutines;
+    }
+
     public void restartBudget(){
         salarySpent = 0;
     }
@@ -39,5 +43,9 @@ public class RoutineList {
     public void printCount() {
         restaurantRoutines.forEach((routine -> System.out.print(routine.getRestaurant().getName() + ": " + routine.getCount()+", ")));
         System.out.print("\n");
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
     }
 }

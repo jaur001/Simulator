@@ -3,9 +3,11 @@ package implementations.xmlBills;
 import model.client.Client;
 import model.restaurant.Eating;
 import model.restaurant.Restaurant;
+import model.restaurant.worker.Payroll;
+import model.restaurant.worker.Worker;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import view.bills.BillGenerator;
+import view.bills.PayrollGenerator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,11 +19,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CFDIBillGenerator implements BillGenerator {
+public class CFDIPayrollGenerator implements PayrollGenerator {
     private static final AtomicInteger billsCount = new AtomicInteger();
-    private static String url = "./xmlFiles/EatingBills/";
+    private static String url = "./xmlFiles/Payrolls/";
     private Document document;
 
     public static String getUrl() {
@@ -29,23 +32,22 @@ public class CFDIBillGenerator implements BillGenerator {
     }
 
     public static void setUrl(String url) {
-        CFDIBillGenerator.url = url;
+        CFDIPayrollGenerator.url = url;
     }
 
-    public void generateBill(Eating eating){
-        System.out.println("New Bill -> Client : " + eating.getClient().getFirstName() + ", Restaurant: " + eating.getRestaurant().getName() + ", amount: " + eating.getBill().getFinalPrice());
+    public void generatePayroll(Payroll payroll) {
+        System.out.println("New Payroll -> Worker : " + payroll.getWorker().getJob() + ", Restaurant: " + payroll.getRestaurant().getName());
         try {
-            createBill(eating);
+            createPayroll(payroll);
 
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
-
     }
 
-    private void createBill(Eating eating) throws ParserConfigurationException, TransformerException {
+    private void createPayroll(Payroll payroll) throws ParserConfigurationException, TransformerException {
         getXMLDocument();
-        appendData(eating);
+        appendData(payroll);
         saveXMLInFile();
     }
 
@@ -54,42 +56,38 @@ public class CFDIBillGenerator implements BillGenerator {
         document = documentBuilder.newDocument();
     }
 
-    private void appendData(Eating eating) {
-        Element bill = appendVoucher(eating);
-        appendClientData(eating.getClient(), bill);
-        appendRestaurantData(eating.getRestaurant(), bill);
+    private void appendData(Payroll payroll) {
+        Element bill = appendVoucher(payroll);
+        appendRestaurantData(payroll.getRestaurant(), bill);
+        appendWorkerData(payroll.getWorker(),bill);
     }
 
-    private Element appendVoucher(Eating eating) {
+    private Element appendVoucher(Payroll payroll) {
         Element bill = document.createElement("cfdi:Voucher");
-        setAttributes(eating, bill);
+        setAttributes(payroll, bill);
         document.appendChild(bill);
         return bill;
     }
 
-    private void setAttributes(Eating eating, Element bill) {
-        bill.setAttribute("Date",eating.getDate().toString());
-        bill.setAttribute("paymentType","1");
-        bill.setAttribute("Location",eating.getRestaurant().getStreet());
+    private void setAttributes(Payroll payroll, Element bill) {
+        bill.setAttribute("Date",new Date().toString());
+        bill.setAttribute("PaymentType","1");
+        bill.setAttribute("Location",payroll.getRestaurant().getStreet());
         bill.setAttribute("Currency", "Euro");
-        bill.setAttribute("Amount", eating.getBill().getFinalPrice()+"");
-    }
-
-    private void appendClientData(Client client, Element bill) {
-        Element clientElement = appendElement("cfdi:Transmitter");
-        clientElement.setAttribute("NIF", client.getNIF()+"");
-        clientElement.setAttribute("name", client.getFirstName()+" "+client.getLastName());
-        bill.appendChild(clientElement);
+        bill.setAttribute("Amount", payroll.getWorker().getSalary()+"");
     }
 
     private void appendRestaurantData(Restaurant restaurant, Element bill) {
-        Element restaurantElement = appendElement("cfdi:Receiver");
+        Element restaurantElement = appendElement("cfdi:Transmitter");
         restaurantElement.setAttribute("NIF", restaurant.getNIF()+"");
         restaurantElement.setAttribute("name", restaurant.getName());
         bill.appendChild(restaurantElement);
-
     }
-
+    private void appendWorkerData(Worker worker, Element bill) {
+        Element clientElement = appendElement("cfdi:Transmitter");
+        clientElement.setAttribute("Job", worker.getJob()+"");
+        bill.appendChild(clientElement);
+    }
 
     private Element appendElement(String name) {
         return document.createElement(name);
@@ -98,7 +96,7 @@ public class CFDIBillGenerator implements BillGenerator {
     private void saveXMLInFile() throws TransformerException {
         Transformer transformer = getTransformer();
         DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(new File(url + "Eating Bill n°" + billsCount.getAndIncrement()));
+        StreamResult result = new StreamResult(new File(url + "Payroll n°" + billsCount.getAndIncrement()));
         transformer.transform(source, result);
     }
 

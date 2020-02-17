@@ -1,4 +1,4 @@
-package implementations.loaders.restaurant;
+package implementations.loaders.restaurant.tripAvisor;
 
 public class PriceRange {
     private int minPrice;

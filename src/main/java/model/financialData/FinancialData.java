@@ -1,18 +1,21 @@
 package model.financialData;
 
-public class FinancialData {
+import java.util.Iterator;
+
+public class FinancialData implements Cloneable {
     /*
     beneficios, total del activo, total del pasivo, patrimonio neto, capital social, tesoreria, compras, ventas
      */
-    protected double totalActive;
-    protected double totalPassive;
+    protected double totalActive;   // total del activo
+    protected double totalPassive;  // total del pasivo
 
-    protected double netWorth;
-    protected double treasury;
-    protected double socialCapital;
+    protected double netWorth;      // patrimonio neto
+    protected double treasury;      // tesoreria
+    protected double socialCapital; // capital social
 
-    protected double purchases;
-    protected double sales;
+    protected double purchases;     // compras
+    protected double sales;         // ventas
+    protected FinancialData lastMonthdata;
 
 
     public FinancialData(double socialCapital) {
@@ -23,6 +26,25 @@ public class FinancialData {
         this.purchases = 0;
         this.totalPassive = 0;
         this.totalActive = 0;
+        this.lastMonthdata = null;
+    }
+
+    public FinancialData getLastMonthData(){
+        return lastMonthdata;
+    }
+
+    public void addMonthData(){
+        try {
+            this.lastMonthdata = (FinancialData)this.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void reset() {
+        addMonthData();
+        totalActive = 0;
+
     }
 
     public double getBenefits() {

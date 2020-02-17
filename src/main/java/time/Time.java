@@ -4,25 +4,29 @@ import model.client.Client;
 import model.provider.Provider;
 import model.restaurant.Restaurant;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class Time {
-    private Year firsYear = new Year();
-    List<Restaurant> restaurantList;
-    List<Client> clientList;
-    List<Provider> providerList;
-    private int actualYear = 2020;
+public class Time{
+    private static Year year = new Year();
+    private static List<Restaurant> restaurantList;
+    private static List<Client> clientList;
+    private static List<Provider> providerList;
+    private static int actualYear = 2020;
 
     public Time(List<Restaurant> restaurantList, List<Client> clientList, List<Provider> providerList) {
-        this.restaurantList = restaurantList;
-        this.clientList = clientList;
-        this.providerList = providerList;
-        firsYear.initialize();
+        Time.restaurantList = restaurantList;
+        Time.clientList = clientList;
+        Time.providerList = providerList;
+        year.initialize();
+    }
+
+    public static Date getActualDate(){
+        return new Date(actualYear,year.getActualMonth(),year.getActualDay());
     }
 
     public void play(){
-        if(firsYear.passTime(restaurantList,clientList,providerList)){
+        if(year.passTime(restaurantList,clientList,providerList)){
             actualYear++;
             System.out.println("New Year: " + actualYear);
         }

@@ -1,6 +1,7 @@
 package model.restaurant;
 
 import model.client.Client;
+import time.Time;
 
 import java.util.Date;
 
@@ -11,10 +12,10 @@ public class Eating {
     private Bill bill;
     private int invitedPeople;
 
-    public Eating(Restaurant restaurant, Client client, Date date, Bill bill, int invitedPeople) {
+    public Eating(Restaurant restaurant, Client client,Bill bill, int invitedPeople) {
         this.restaurant = restaurant;
         this.client = client;
-        this.date = date;
+        this.date = Time.getActualDate();
         this.bill = bill;
         this.invitedPeople = invitedPeople;
     }

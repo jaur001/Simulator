@@ -3,7 +3,9 @@ package time;
 import model.client.Client;
 import model.provider.Provider;
 import model.restaurant.Restaurant;
-import threads.SalaryThread;
+import threads.BudgetRestartThread;
+import threads.WorkerPayrollThread;
+
 import java.util.List;
 
 public class Year {
@@ -17,14 +19,20 @@ public class Year {
         if(yearMonths[actualMonth-1].passTime(restaurantList,clientList,providerList)){
             actualMonth = ++actualMonth>lastMonth?1 : actualMonth;
             System.out.println("New Month: " + actualMonth);
+            checkRestaurantDebts(restaurantList);
             enterSalaryToClients(clientList);
             return actualMonth==1;
         }
         return false;
     }
 
+    private void checkRestaurantDebts(List<Restaurant> restaurantList) {
+        restaurantList.stream().forEach(restaurant -> restaurant.payDebts());
+        WorkerPayrollThread.executeThreads(restaurantList);
+    }
+
     private void enterSalaryToClients(List<Client> clientList) {
-        SalaryThread.executeThreads(clientList);
+        BudgetRestartThread.executeThreads(clientList);
     }
 
     public void initialize() {
@@ -32,5 +40,13 @@ public class Year {
             yearMonths[i] = new Month();
             yearMonths[i].initialize();
         }
+    }
+
+    public int getActualMonth() {
+        return actualMonth;
+    }
+
+    public int getActualDay(){
+        return yearMonths[actualMonth].getActualDay();
     }
 }

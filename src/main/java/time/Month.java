@@ -28,4 +28,8 @@ public class Month {
             monthDays[i].initialize();
         }
     }
+
+    public int getActualDay() {
+        return actualDay;
+    }
 }

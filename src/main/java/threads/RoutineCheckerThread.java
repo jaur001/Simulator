@@ -14,26 +14,23 @@ import java.util.stream.IntStream;
 
 public class RoutineCheckerThread extends Thread{
     private final Client client;
-    private static final String url = "./xmlFiles/";
 
     private RoutineCheckerThread(Client client) {
         this.client = client;
     }
 
-    public Client getClient() {
-        return client;
-    }
 
     @Override
     public void run(){
         client.getRoutineList().checkRoutines()
-                .forEach(restaurantToEat -> getBill(client,restaurantToEat));
+                .forEach(restaurantToEat -> getBill(restaurantToEat));
     }
 
-    private void getBill(Client i, Restaurant j) {
-        double amount = new DistributionAmountGenerator().generate(j,i);
-        i.pay(amount);
-        new CFDIBillGenerator().generateBill(new Eating(j,i,new Date(),new Bill(amount),client.getCommensalNumber()),url);
+    private void getBill(Restaurant restaurant) {
+        double amount = new DistributionAmountGenerator().generate(restaurant,client);
+        client.pay(amount);
+        restaurant.addSale(amount);
+        new CFDIBillGenerator().generateBill(new Eating(restaurant,client,new Bill(amount),client.getCommensalNumber()));
     }
 
     public static void executeThreads(List<Client> clientList){

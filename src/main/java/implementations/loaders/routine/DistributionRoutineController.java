@@ -33,7 +33,7 @@ public class DistributionRoutineController implements RoutineController {
     }
 
     private int selectNumberOfRestaurants(double salary, Integer salaryOption) {
-        return MathUtils.random(1,3);
+        return RoutineUtils.getNumOfRestaurantSample();
     }
 
 

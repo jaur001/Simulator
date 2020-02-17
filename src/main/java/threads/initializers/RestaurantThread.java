@@ -1,8 +1,8 @@
-package threads;
+package threads.initializers;
 
 import model.restaurant.Restaurant;
 import view.loaders.restaurant.RestaurantLoader;
-import implementations.loaders.restaurant.TripAdvisorRestaurantLoader;
+import implementations.loaders.restaurant.tripAvisor.TripAdvisorRestaurantLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class RestaurantThread extends Thread{
         joinThreads(restaurantThreads);
         List<Restaurant> pageList = new ArrayList<>();
         addRestaurantsToFinalList(restaurantThreads, pageList);
-        return new ArrayList<Restaurant>(new HashSet<>(pageList));
+        return new ArrayList<>(new HashSet<>(pageList));
     }
 
     private static RestaurantThread[] getThreads(int threadsCount) {
