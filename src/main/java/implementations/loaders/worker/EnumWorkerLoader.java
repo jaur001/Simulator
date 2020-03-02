@@ -21,9 +21,9 @@ public class EnumWorkerLoader implements WorkerLoader {
     }
 
     private List<Worker> loadWorkersGroup(Job job,int numTables) {
-        int numWorkers = RestaurantUtils.getWorkerGroup(job,numTables);
+        int numWorkers = RestaurantUtils.getWorkerLengthGroup(job,numTables);
         return IntStream.range(0,numWorkers).boxed()
-                .map(integer -> new Worker(500,job))
+                .map(integer -> new Worker(RestaurantUtils.getWorkerSalaryGroup(job),job))
                 .collect(Collectors.toList());
     }
 }

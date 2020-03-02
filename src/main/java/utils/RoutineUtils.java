@@ -37,7 +37,7 @@ public class RoutineUtils {
     }
 
     public static int getNumOfRestaurantSample(){
-        return MathUtils.random(1,3);
+        return MathUtils.random(1,1);
     }
 
     public static Restaurant[] getRestaurantOptions(double salary, List<Restaurant> restaurantList){
@@ -48,4 +48,7 @@ public class RoutineUtils {
     }
 
 
+    public static int getNextVisitDaySample(double salary, double salaryOption) {
+        return MathUtils.random(7,14);
+    }
 }

@@ -43,8 +43,6 @@ public class FinancialData implements Cloneable {
 
     protected void reset() {
         addMonthData();
-        totalActive = 0;
-
     }
 
     public double getBenefits() {

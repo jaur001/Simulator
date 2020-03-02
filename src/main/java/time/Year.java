@@ -4,13 +4,13 @@ import model.client.Client;
 import model.provider.Provider;
 import model.restaurant.Restaurant;
 import threads.BudgetRestartThread;
-import threads.WorkerPayrollThread;
+import threads.bills.WorkerPayrollThread;
 
 import java.util.List;
 
 public class Year {
-    private Month[] yearMonths = new Month[12];
-    private int actualMonth = 1;
+    private static Month[] yearMonths = new Month[12];
+    private static int actualMonth = 1;
     private int lastMonth = 12;
 
 
@@ -27,7 +27,7 @@ public class Year {
     }
 
     private void checkRestaurantDebts(List<Restaurant> restaurantList) {
-        restaurantList.stream().forEach(restaurant -> restaurant.payDebts());
+        restaurantList.forEach(Restaurant::payDebts);
         WorkerPayrollThread.executeThreads(restaurantList);
     }
 
@@ -36,17 +36,18 @@ public class Year {
     }
 
     public void initialize() {
+        System.out.println("New Month: " + actualMonth);
         for (int i = 0; i < yearMonths.length; i++) {
             yearMonths[i] = new Month();
             yearMonths[i].initialize();
         }
     }
 
-    public int getActualMonth() {
+    public static int getActualMonth() {
         return actualMonth;
     }
 
-    public int getActualDay(){
-        return yearMonths[actualMonth].getActualDay();
+    public static int getActualDay(){
+        return Month.getActualDay();
     }
 }

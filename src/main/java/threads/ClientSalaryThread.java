@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 public class ClientSalaryThread extends Thread {
     private final Client client;
 
-    protected ClientSalaryThread(Client client) {
+    private ClientSalaryThread(Client client) {
         this.client = client;
     }
 

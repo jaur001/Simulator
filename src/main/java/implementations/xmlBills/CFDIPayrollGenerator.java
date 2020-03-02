@@ -7,6 +7,8 @@ import model.restaurant.worker.Payroll;
 import model.restaurant.worker.Worker;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import time.Month;
+import time.Year;
 import view.bills.PayrollGenerator;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -60,6 +62,7 @@ public class CFDIPayrollGenerator implements PayrollGenerator {
         Element bill = appendVoucher(payroll);
         appendRestaurantData(payroll.getRestaurant(), bill);
         appendWorkerData(payroll.getWorker(),bill);
+        appendTimeWorked(bill);
     }
 
     private Element appendVoucher(Payroll payroll) {
@@ -83,10 +86,16 @@ public class CFDIPayrollGenerator implements PayrollGenerator {
         restaurantElement.setAttribute("name", restaurant.getName());
         bill.appendChild(restaurantElement);
     }
+
     private void appendWorkerData(Worker worker, Element bill) {
         Element clientElement = appendElement("cfdi:Transmitter");
         clientElement.setAttribute("Job", worker.getJob()+"");
         bill.appendChild(clientElement);
+    }
+    private void appendTimeWorked(Element bill) {
+        Element timeWorked = appendElement("cfdi:Settlement Period");
+        timeWorked.setAttribute("Month", Year.getActualMonth()+"");
+        bill.appendChild(timeWorked);
     }
 
     private Element appendElement(String name) {

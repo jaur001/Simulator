@@ -56,7 +56,7 @@ public class SQLRestaurantWriter implements DatabaseRestaurantWriter {
         return "CREATE TABLE IF NOT EXISTS Restaurant (\n"
                 + " NIF integer PRIMARY KEY,\n"
                 + " name text NOT NULL UNIQUE,\n"
-                + " telephoneNumber text NOT NULL UNIQUE,\n"
+                + " telephoneNumber text NOT NULL,\n"
                 + " street text NOT NULL,\n"
                 + " minPrice integer NOT NULL,\n"
                 + " maxPrice integer NOT NULL,\n"
@@ -109,6 +109,6 @@ public class SQLRestaurantWriter implements DatabaseRestaurantWriter {
     }
 
     public void setConnection(Connection connection) {
-        this.connection = connection;
+        SQLRestaurantWriter.connection = connection;
     }
 }

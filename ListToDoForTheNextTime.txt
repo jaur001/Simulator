@@ -40,3 +40,6 @@ de inicio, la fecha de finalización y el total de días.
 
 H - Salario base: Cantidad que el trabajador percibe por los días trabajados y que no puede ser inferior
 a lo establecido por el convenio que se le aplique.
+
+
+- Añadir clase generica para reader de provider y client

@@ -3,12 +3,13 @@ package time;
 import model.client.Client;
 import model.provider.Provider;
 import model.restaurant.Restaurant;
+import threads.bills.RoutineCheckerThread;
 
 import java.util.List;
 
 public class Month {
     private Day[] monthDays = new Day[30];
-    private int actualDay = 1;
+    private static int actualDay = 1;
     private int lastDay = 30;
 
 
@@ -16,11 +17,16 @@ public class Month {
         if(monthDays[actualDay-1].passTime(restaurantList,clientList,providerList)){
             actualDay = ++actualDay>lastDay?1 : actualDay;
             System.out.println("New Day: " + actualDay);
+            receiveClients(clientList);
             return actualDay==1;
         }
         return false;
     }
 
+
+    private void receiveClients(List<Client> clientList) {
+        RoutineCheckerThread.executeThreads(clientList);
+    }
 
     public void initialize() {
         for (int i = 0; i < monthDays.length; i++) {
@@ -29,7 +35,7 @@ public class Month {
         }
     }
 
-    public int getActualDay() {
+    public static int getActualDay() {
         return actualDay;
     }
 }

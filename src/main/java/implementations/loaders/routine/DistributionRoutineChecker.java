@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class DistributionRoutineChecker implements RoutineChecker {
 
-    public static final double PERCENTAGE_FOR_RESTAURANT = 0.148;
+    private static final double PERCENTAGE_FOR_RESTAURANT = 0.148;
     private double salary;
     private double budgetForRestaurant;
     private double salarySpent;
@@ -33,8 +33,9 @@ public class DistributionRoutineChecker implements RoutineChecker {
     }
 
     private List<Restaurant> getRestaurants() {
-        restartRoutines(getRoutines());
-        return restaurantRoutines.stream()
+        List<Routine> routinesForToday = getRoutines();
+        restartRoutines(routinesForToday);
+        return routinesForToday.stream()
                 .map(Routine::getRestaurant)
                 .collect(Collectors.toList());
     }

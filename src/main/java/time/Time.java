@@ -18,11 +18,12 @@ public class Time{
         Time.restaurantList = restaurantList;
         Time.clientList = clientList;
         Time.providerList = providerList;
+        System.out.println("New Year: " + actualYear);
         year.initialize();
     }
 
     public static Date getActualDate(){
-        return new Date(actualYear,year.getActualMonth(),year.getActualDay());
+        return new Date(actualYear, Year.getActualMonth(), Year.getActualDay());
     }
 
     public void play(){

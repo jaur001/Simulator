@@ -1,19 +1,16 @@
 package model.provider;
 
-public class Product {
-    String name;
-    double cost;
+public enum  Product {
+    Vegetable,
+    Meat,
+    Fish,
+    Wheat,
+    Egg,
+    Legume,
+    Fruit;
 
-    public Product(String name, double cost) {
-        this.name = name;
-        this.cost = cost;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getCost() {
-        return cost;
+    @Override
+    public String toString() {
+        return this.name();
     }
 }

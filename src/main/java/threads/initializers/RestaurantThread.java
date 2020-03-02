@@ -1,8 +1,8 @@
 package threads.initializers;
 
 import model.restaurant.Restaurant;
-import view.loaders.restaurant.RestaurantLoader;
-import implementations.loaders.restaurant.tripAvisor.TripAdvisorRestaurantLoader;
+import view.loaders.restaurant.RestaurantReader;
+import implementations.loaders.restaurant.tripAvisor.TripAdvisorRestaurantReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,9 +25,9 @@ public class RestaurantThread extends Thread{
 
     @Override
     public void run(){
-        RestaurantLoader loader = new TripAdvisorRestaurantLoader();
+        RestaurantReader loader = new TripAdvisorRestaurantReader();
         try {
-            list = loader.load(i);
+            list = loader.read(i);
         } catch (IOException e) {
             System.out.println("Error: Time Out exception");
         }

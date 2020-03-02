@@ -38,5 +38,6 @@ public class RestaurantFinancialData extends FinancialData {
         System.out.println("Last Month Data: ");
         System.out.println("Treasury: " + lastMonthdata.treasury + "$");
         System.out.println("netWorth: " + lastMonthdata.netWorth + "$");
+        totalActive = 0;
     }
 }

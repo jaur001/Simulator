@@ -18,8 +18,11 @@ public class ProviderFinancialData extends FinancialData {
         totalActive += amount;
     }
 
-    public void addNewProduct(double productPrice) {
-        purchases+=productPrice;
-        totalPassive+=productPrice;
+    public void removeMonthClient(double amount){
+        sales -= amount;
+        treasury -= amount;
+        netWorth -= amount;
+        totalActive -= amount;
     }
+
 }
