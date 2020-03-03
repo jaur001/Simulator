@@ -1,4 +1,12 @@
 package implementations.xmlBills;
 
-public class CFDIPurchaseGenerator {
+import model.provider.Provider;
+import model.restaurant.Restaurant;
+import view.bills.PurchaseGenerator;
+
+public class CFDIPurchaseGenerator implements PurchaseGenerator {
+    @Override
+    public void generatePurchase(Restaurant restaurant, Provider provider) {
+
+    }
 }

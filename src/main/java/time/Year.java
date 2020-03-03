@@ -28,11 +28,11 @@ public class Year {
 
     private void checkRestaurantDebts(List<Restaurant> restaurantList) {
         restaurantList.forEach(Restaurant::payDebts);
-        WorkerPayrollThread.executeThreads(restaurantList);
+        WorkerPayrollThread.payWorkers(restaurantList);
     }
 
     private void enterSalaryToClients(List<Client> clientList) {
-        BudgetRestartThread.executeThreads(clientList);
+        BudgetRestartThread.restartBudgets(clientList);
     }
 
     public void initialize() {

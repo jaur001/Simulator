@@ -8,6 +8,7 @@ import implementations.xmlBills.CFDIBillGenerator;
 import implementations.xmlBills.CFDIPayrollGenerator;
 import model.client.Client;
 import model.provider.Provider;
+import threads.initializers.RestaurantThread;
 import threads.initializers.RoutineThread;
 import threads.initializers.WorkerThread;
 import model.restaurant.Restaurant;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        //int count = 1;
+        int count = 5;
         int clientRowNumber = 1;
         int providerRowNumber = 100;
         int restaurantRowNumber = 30;
@@ -34,23 +35,24 @@ public class Main {
         SQLiteRestaurantReader.setSQLiteUrl(url);
 
         List<Provider> providerList = new ProviderLoaderCSV().load(urlProvider,providerRowNumber);
-        ProductInitializerThread.executeThreads(providerList);
+        ProductInitializerThread.initProducts(providerList);
 
-        //List<Restaurant> restaurantList = RestaurantThread.loadRestaurantsPage(count);
-        List<Restaurant> restaurantList = new SQLiteRestaurantReader().read(restaurantRowNumber);
-        WorkerThread.executeThreads(restaurantList);
-        ProvidingThread.executeThreads(providerList,restaurantList);
+        List<Restaurant> restaurantList = RestaurantThread.loadRestaurantsPage(count);
+        System.out.println(restaurantList.size());
+        //List<Restaurant> restaurantList = new SQLiteRestaurantReader().read(restaurantRowNumber);
+        WorkerThread.addWorkers(restaurantList);
+        ProvidingThread.initRestaurantProviders(providerList,restaurantList);
 
         List<Client> clientList = new ClientLoaderCSV().load(urlClient,clientRowNumber);
-        RoutineThread.executeThreads(clientList,restaurantList);
+        RoutineThread.setClientRoutines(clientList,restaurantList);
 
-        /*Time time = new Time(restaurantList,clientList,providerList);
+        Time time = new Time(restaurantList,clientList,providerList);
         while(true){
             time.play();
             for (Client i : clientList) {
                 i.printRoutines();
             }
-        }*/
+        }
 
     }
 }

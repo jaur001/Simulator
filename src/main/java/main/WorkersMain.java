@@ -16,7 +16,7 @@ public class WorkersMain {
         CFDIBillGenerator.setUrl("./xmlFiles/");
 
         List<Restaurant> restaurantList = RestaurantThread.loadRestaurantsPage(count);
-        WorkerThread.executeThreads(restaurantList);
+        WorkerThread.addWorkers(restaurantList);
         restaurantList.stream()
                 .forEach(restaurant -> restaurant.getWorkerList().stream()
                     .forEach(worker -> System.out.println("Worker: " + worker.getJob()))

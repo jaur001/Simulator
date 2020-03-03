@@ -12,51 +12,20 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class RoutineCheckerThread extends Thread{
-    private final Client client;
 
-    private RoutineCheckerThread(Client client) {
-        this.client = client;
+    public static void checkRoutines(List<Client> clientList){
+        clientList.parallelStream().forEach(RoutineCheckerThread::checkRoutines);
     }
 
-
-    @Override
-    public void run(){
+    private static void checkRoutines(Client client){
         client.getRoutineList().checkRoutines()
-                .forEach(this::getBill);
+                .forEach(restaurant -> getBill(restaurant,client));
     }
 
-    private void getBill(Restaurant restaurant) {
+    private static void getBill(Restaurant restaurant, Client client) {
         double amount = new DistributionAmountGenerator().generate(restaurant,client);
         client.pay(amount);
         restaurant.addSale(amount);
         new CFDIBillGenerator().generateBill(new Eating(restaurant,client,new Bill(amount),client.getCommensalNumber()));
-    }
-
-    public static void executeThreads(List<Client> clientList){
-        RoutineCheckerThread[] routineCheckerThreadsList = getThreads(clientList);
-        startThreads(routineCheckerThreadsList);
-        joinThreads(routineCheckerThreadsList);
-    }
-
-    private static RoutineCheckerThread[] getThreads(List<Client> clientList){
-        return clientList.stream()
-                .map(RoutineCheckerThread::new)
-                .toArray(RoutineCheckerThread[]::new);
-    }
-
-    private static void startThreads(RoutineCheckerThread[] threads) {
-        IntStream.range(0,threads.length)
-                .forEach(pos -> threads[pos].start());
-    }
-    private static void joinThreads(RoutineCheckerThread[] threads) {
-        Arrays.stream(threads).forEach(RoutineCheckerThread::joinThread);
-    }
-
-    private static void joinThread(RoutineCheckerThread thread){
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }

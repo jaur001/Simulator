@@ -37,7 +37,7 @@ public class RoutineUtils {
     }
 
     public static int getNumOfRestaurantSample(){
-        return MathUtils.random(1,1);
+        return MathUtils.random(1,2);
     }
 
     public static Restaurant[] getRestaurantOptions(double salary, List<Restaurant> restaurantList){

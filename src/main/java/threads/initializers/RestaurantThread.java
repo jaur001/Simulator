@@ -1,76 +1,31 @@
 package threads.initializers;
 
 import model.restaurant.Restaurant;
-import view.loaders.restaurant.RestaurantReader;
 import implementations.loaders.restaurant.tripAvisor.TripAdvisorRestaurantReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class RestaurantThread extends Thread{
-    private List<Restaurant> list = new ArrayList<>();
-    private int i;
+public class RestaurantThread{
 
-    private RestaurantThread(int i) {
-        this.i = i;
+    public static List<Restaurant> loadRestaurantsPage(int threadsCount){
+        return IntStream.range(0,threadsCount).boxed()
+                .parallel().map(RestaurantThread::getPage)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
     }
 
-    public List<Restaurant> getList() {
-        return list;
-    }
-
-    @Override
-    public void run(){
-        RestaurantReader loader = new TripAdvisorRestaurantReader();
+    private static List<Restaurant> getPage(int page){
         try {
-            list = loader.read(i);
+            return new TripAdvisorRestaurantReader().read(page);
         } catch (IOException e) {
             System.out.println("Error: Time Out exception");
         }
+        return new ArrayList<>();
     }
 
-    public static List<Restaurant> loadRestaurantsPage(int threadsCount){
-        RestaurantThread[] restaurantThreads = getThreads(threadsCount);
-        startThreads(restaurantThreads);
-        joinThreads(restaurantThreads);
-        List<Restaurant> pageList = new ArrayList<>();
-        addRestaurantsToFinalList(restaurantThreads, pageList);
-        return new ArrayList<>(new HashSet<>(pageList));
-    }
-
-    private static RestaurantThread[] getThreads(int threadsCount) {
-        return IntStream.range(0,threadsCount).boxed()
-                .map(RestaurantThread::getThread)
-                .toArray(RestaurantThread[]::new);
-    }
-
-    private static RestaurantThread getThread(int pos) {
-        return new RestaurantThread(pos);
-    }
-
-    private static void startThreads(RestaurantThread[] threads) {
-        IntStream.range(0,threads.length)
-                .forEach(pos -> threads[pos].start());
-    }
-
-    private static void addRestaurantsToFinalList(RestaurantThread[] threads, List<Restaurant> auxList) {
-        IntStream.range(0,threads.length)
-                .forEach(pos -> auxList.addAll(threads[pos].getList()));
-    }
-
-    private static void joinThreads(RestaurantThread[] threads) {
-        Arrays.stream(threads).forEach(RestaurantThread::joinThread);
-    }
-
-    private static void joinThread(RestaurantThread thread){
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }

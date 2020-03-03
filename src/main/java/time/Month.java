@@ -25,7 +25,7 @@ public class Month {
 
 
     private void receiveClients(List<Client> clientList) {
-        RoutineCheckerThread.executeThreads(clientList);
+        RoutineCheckerThread.checkRoutines(clientList);
     }
 
     public void initialize() {
