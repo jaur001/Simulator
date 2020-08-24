@@ -14,3 +14,13 @@ It is only need to clone and execute the project execute the main class (Main.cl
 * Java - Language
 * [SQLite Browse](https://sqlitebrowser.org/) - SQL Relational DB Management System Aplication
 * [Maven](https://maven.apache.org/) - Dependency Management
+
+## Simulation - Console Events
+
+![bills](https://github.com/jaur001/SimulatorServer/blob/release/GIF/console.gif)
+
+
+
+## Simulation - Bills
+
+![bills](https://github.com/jaur001/SimulatorServer/blob/release/GIF/bills.gif)
